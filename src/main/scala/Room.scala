@@ -2,10 +2,9 @@
 
 package main.scala
 
-case class Room(Desc: String, Objs: Array[String] = Array.empty, Rooms: Map[Char, String]) {
-  val desc = Desc
-  var objs: Array[String] = Objs
-  val rooms: Map[Char, String] = Rooms
+import scala.collection.mutable.ListBuffer
+
+case class Room(desc: String, items: ListBuffer[Item] = ListBuffer.empty, rooms: Map[Char, String] = Map.empty) {
   
   def enter {
     println(s"$desc $printObjs $printRooms")
@@ -14,12 +13,12 @@ case class Room(Desc: String, Objs: Array[String] = Array.empty, Rooms: Map[Char
   def printObjs: String = {
 
     var str = ""
-    if (objs.length != 0) {
+    if (items.length != 0) {
        str = "There is a "
 
-      for (i <- (0 until objs.length).reverse) {
+      for (i <- (0 until items.length).reverse) {
   
-        val item = objs(i).capitalize.toString()
+        val item = items(i).name.capitalize.toString()
         str = str + item
         
         if (i == 1) str = str + " and a "
