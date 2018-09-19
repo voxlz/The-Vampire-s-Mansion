@@ -4,10 +4,16 @@ package main.scala
 
 import scala.collection.mutable.ListBuffer
 
-case class Room(desc: String, items: ListBuffer[Item] = ListBuffer.empty, rooms: Map[Char, String] = Map.empty) {
+case class Room(desc: String, items: ListBuffer[Item] = ListBuffer.empty, rooms: Map[Char, String] = Map.empty, fstDesc: String = "") {
+  
+  var beenHereBefore = false
   
   def enter {
-    println(s"$desc $printObjs $printRooms")
+    if (beenHereBefore) {
+      println(s"$desc $printObjs $printRooms")
+    } else {
+      println(s"$fstDesc $printObjs $printRooms")
+    }
   }
   
   def printObjs: String = {

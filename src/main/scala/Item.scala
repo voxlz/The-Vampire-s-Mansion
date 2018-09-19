@@ -4,7 +4,7 @@ package main.scala
 
 import scala.collection.mutable.ListBuffer
 
-case class Item(name: String, obtainable: Boolean = false, unlocksItem: Item = null, desc: String = "Nothing of interest here.", event: Tuple3(String, String, Item) = Tuple3.nill) {
+case class Item(name: String, obtainable: Boolean = false, unlocksItem: Item = null, desc: String = "Nothing of interest here.") {
   
   // Event expects 
   
