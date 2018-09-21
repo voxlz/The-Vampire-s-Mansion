@@ -4,19 +4,32 @@ package main.scala
 
 import scala.collection.mutable.ListBuffer
 
-case class Room(desc: String, items: ListBuffer[Item] = ListBuffer.empty, rooms: Map[Char, String] = Map.empty, fstDesc: String = "") {
-  
+case class Room
+(
+  name: String,
+  entry: String = "", 
+  desc: String, 
+  items: ListBuffer[Item] = ListBuffer.empty, 
+  var doors: ListBuffer[Door] = ListBuffer.empty
+)
+{
   var beenHereBefore = false
   
   def enter {
-    if (beenHereBefore) {
-      println(s"$desc $printObjs $printRooms")
+    
+    if (name == "freedom") {
+      println(Start.asciiMansion)
+    }
+    
+    else if (beenHereBefore || entry == "") {
+      println(s"$desc\n$listItems $printRooms")
     } else {
-      println(s"$fstDesc $printObjs $printRooms")
+      println(s"$entry\n$listItems $printRooms")
+      beenHereBefore = true
     }
   }
   
-  def printObjs: String = {
+  def listItems: String = {
 
     var str = ""
     if (items.length != 0) {
@@ -24,11 +37,11 @@ case class Room(desc: String, items: ListBuffer[Item] = ListBuffer.empty, rooms:
 
       for (i <- (0 until items.length).reverse) {
   
-        val item = items(i).name.capitalize.toString()
+        val item = items(i).name.capitalize
         str = str + item
         
-        if (i == 1) str = str + " and a "
-        if (i > 1) str = str + ", a "
+        if (i == 1) str += " and a "
+        if (i > 1) str += ", a "
       }
       
       str = str + (" in this room.")
@@ -41,26 +54,17 @@ case class Room(desc: String, items: ListBuffer[Item] = ListBuffer.empty, rooms:
   def printRooms: String = {
     var str = ""
     
-    if (rooms.count(p => true) > 1) {
-      str = "There are doors to the "
-    } else {
-      str = "There is a door to the "
-    }
-    
-    for (i <- rooms.keys) {
-      i match {
-          case 'n'  => str = str + ("north")
-          case 's'  => str = str + ("south")
-          case 'w'  => str = str + ("west")
-          case 'e'  => str = str + ("east")
-          case 'u'  => str = str + ("up")
-          case 'd'  => str = str + ("down")
-          // catch the default with a variable so you can print it
-          case whoa  => println("Unexpected case: " + whoa.toString)
+    for (door <- doors) {
+      val t = door.doorType
+      val dir = door.dir
+
+      if (door.doorType == "door") {
+         str += s"There is a $t to the $dir. "
+      } else {
+         str += s"There are $t leading $dir. "
       }
     }
-    
-    str + "."
+    str
   }
 }
 
