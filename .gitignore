@@ -4,4 +4,5 @@
 .project
 .classpath
 target/
-
+project/project
+project/target
