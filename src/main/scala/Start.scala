@@ -27,7 +27,8 @@ object Start {
   
   val hallway = Room(
       name = "hallway",
-      desc = "You enter a long hallway with pantings along the wall. They all seem to look straight at you.",
+      entry = "You enter a long hallway with pantings along the wall. They all seem to look straight at you.",
+      desc = "A long hallway with pantings along the wall. Rain is hitting the hallway windows.",
       doors = ListBuffer(
         Door(Dir.WEST, "bedroom"),
         Door(Dir.EAST, "dinning room"),
@@ -64,14 +65,14 @@ object Start {
 
   val bedroom = Room(
       name = "bedroom",
-      entry="'My head hurts' you mutter, while slowly waking up. The dark room looks like a bedroom, except the bed is missing?\nMabye you should 'look' around.",
+      entry="'My head hurts' you mutter, while slowly waking up. The dark room looks like a bedroom, except the bed is missing?\nMabye you should 'look' around. (type 'help' for all commands)",
       desc="It's a dark bedroom. This was where I woke up.", 
       items = ListBuffer(
         Item("coffin", "It looks like a big black coffin. The lid is slightly open.",
             event = coffin), 
         Item("lamp", "It's an older lamp. The lightbulb seems to be missing."), 
-        Item("desk", "It's a dusty desk, with multiple drawers. There might be something inside.", 
-            unlocksItem = Item("key", "It's a small golden key.", true))), 
+        Item("desk", "It's a dusty desk, with multiple drawers. There might be something 'use'ful inside.", 
+            unlocksItem = Item("key", "It's a small golden key. You could 'use' this to open some door.", true))), 
       doors = ListBuffer(
         Door(Dir.EAST, "hallway", "key")))
         
@@ -83,7 +84,20 @@ object Start {
   var currentRoom: Room = bedroom
   
   def main(args: Array[String]) = {
-    println("Welcome to 'The Vampire's mansion'!")
+    println("Welcome to...")
+    println(
+      """
+      
+ __ __|  |                                               _)             )      
+    |    __ \    _ \     \ \   /  _` |  __ `__ \   __ \   |   __|  _ \ /   __| 
+    |    | | |   __/      \ \ /  (   |  |   |   |  |   |  |  |     __/   \__ \ 
+   _|   _| |_| \___|       \_/  \)_,_| _|  _|  _|  .__/  _| _|   \___|   ____/ 
+  __ `__ \    _` |  __ \    __|  |   _ \   __ \   _|                           
+  |   |   |  (   |  |   | \__ \  |  (   |  |   |                               
+ _|  _|  _| \__,_| _|  _| ____/ _| \___/  _|  _|                               
+                                                                               
+
+      """)
     
     if (usrYesOrNo("Do you want to start the game?")) start()
   }
@@ -134,11 +148,13 @@ object Start {
       if(inventory.length == 0) {
         println("My pockets are empty")
       } else {
-        print("My pockets contain... ")
-      }
+        print("My pockets contain: ")
 
-      for (item <- inventory) {
-        print(item.name + ". ")
+        for (item <- inventory) {
+          print(item.name + ". ")
+        }
+        
+        print("\n")
       }
     }
     
@@ -221,7 +237,7 @@ object Start {
   ///god damn
   def asciiMansion = {
     
-    println("\n-------------------YOU WON------------------\n")
+    println("The large door squeaks open. You escape into the night, with one final look behind you.\n-------------------YOU WON------------------\n")
     gameRunning = false
     
     """               *         .              *            _.---._      
@@ -253,7 +269,7 @@ object Start {
     |___|/\/\/\/\/\/\/\|___|/\/\/\/\/\|| ||/\/\/\/\/\|___|/\/\/\/\/\/\/\|___|
     |_|_|\/\/\/\/\/\/\/|_|_|\/\/\/\/\/|| ||\/\/\/\/\/|_|_|\/\/\/\/\/\/\/|_|_|
     |___|/\/\/\/\/\/\/\|___|/\/\/\/\/\|| ||/\/\/\/\/\|___|/\/\/\/\/\/\/\|___|
-~""~|_|_|\/\/\/\/\/\/\/|_|_|\/\/\/\/\/|| ||\/\/\/\/\/|_|_|\/\/\/\/\/\/\/|_lc|~""~
+~""~|_|_|\/\/\/\/\/\/\/|_|_|\/\/\/\/\/|| ||\/\/\/\/\/|_|_|\/\/\/\/\/\/\/|_l_|~""~
    [_____]            [_____]                       [_____]            [_____]
    ---------------------------------------------------------------------------"""
   }
