@@ -10,7 +10,7 @@ object Start {
   var gameRunning = true
   
   // EVENTS
-  val coffin = Event(
+  var coffin = Event(
       promt = "Something is sleeping inside the coffin! Do you want to wake it up?",
       yesStr = "You pull the lid off with a loud crash.", 
       noStr = "You slowly move away. 'I think it's better to be quiet'", 
@@ -18,14 +18,14 @@ object Start {
       correct = false)
   
   // ROOMS
-  val error = Room("error", "error", "error")
+  var error = Room("error", "error", "error")
   
-  val freedom = Room(
+  var freedom = Room(
     name = "freedom", 
     desc = "hey, you won"
   )
   
-  val hallway = Room(
+  var hallway = Room(
       name = "hallway",
       entry = "You enter a long hallway with pantings along the wall. They all seem to look straight at you.",
       desc = "A long hallway with pantings along the wall. Rain is hitting the hallway windows.",
@@ -41,7 +41,7 @@ object Start {
           )
       )
       
-  val entrance = Room(
+  var entrance = Room(
       name = "entrance",
       entry = "Is that..? It's the exit! There is the main exit door!",
       desc = "It's a big entry room with banners hanging from the roof.",
@@ -51,19 +51,19 @@ object Start {
         )
       )
       
-  val dinning_room = Room(
+  var dinning_room = Room(
       name = "dinning room",
       desc = "This room has a big long table in it, but only one chair on each end.",
       items = ListBuffer(
           Item("wine glass", "It contains a red fluid. Hmm."),
-          Item("gun", "It's a clock, just laying next to a plate", event = Event("Shoot yourself?", "You shoot your foot. The bang was so loud the vampire woke up!", "'I'm sure it's not loaded', you think", gameOver, false))
+          Item("gun", "It's a clock, just laying next to a plate", event = Event("Shoot yourself?", "You shoot your foot for no reason. The bang was so loud the vampire woke up!", "'I'm sure it's not loaded', you think", gameOver, false))
         ),
       doors = ListBuffer(
           Door(Dir.WEST, "hallway")
         )
       )
 
-  val bedroom = Room(
+  var bedroom = Room(
       name = "bedroom",
       entry="'My head hurts' you mutter, while slowly waking up. The dark room looks like a bedroom, except the bed is missing?\nMabye you should 'look' around. (type 'help' for all commands)",
       desc="It's a dark bedroom. This was where I woke up.", 
@@ -78,8 +78,7 @@ object Start {
         
   
   // Make list of rooms
-  val rooms: ListBuffer[Room] = ListBuffer(hallway, bedroom, dinning_room, entrance, freedom, error)      
-  
+  var rooms: ListBuffer[Room] = ListBuffer(hallway, bedroom, dinning_room, entrance, freedom, error)      
   var inventory: ListBuffer[Item] = ListBuffer.empty
   var currentRoom: Room = bedroom
   
@@ -192,7 +191,87 @@ object Start {
   }
   
   def start() {
-    println("\n----------------------Game Start--------------------\n")
+
+    // VARIABLES
+    gameRunning = true
+    
+    // EVENTS
+    coffin = Event(
+        promt = "Something is sleeping inside the coffin! Do you want to wake it up?",
+        yesStr = "You pull the lid off with a loud crash.", 
+        noStr = "You slowly move away. 'I think it's better to be quiet'", 
+        func = gameOver,
+        correct = false)
+    
+    // ROOMS
+    error = Room("error", "error", "error")
+    
+    freedom = Room(
+      name = "freedom", 
+      desc = "hey, you won"
+    )
+    
+    hallway = Room(
+        name = "hallway",
+        entry = "You enter a long hallway with pantings along the wall. They all seem to look straight at you.",
+        desc = "A long hallway with pantings along the wall. Rain is hitting the hallway windows.",
+        doors = ListBuffer(
+          Door(Dir.WEST, "bedroom"),
+          Door(Dir.EAST, "dinning room"),
+          Door(Dir.DOWN, "entrance", doorType = "stairs")
+        ),
+        items = ListBuffer(
+            Item("painting", "It depicts a eerie family with fangs.", unlocksItem = Item("Calculus book", "Looks like a math. You hate math.", true)),
+            Item("window", "Looks like this house is placed on a hill outside the city. Too high to jump.",
+             event = Event("Jump out of the window?", "You shatter the window and jump. The fall breaks your leg. You hear something behind you...", "'The noice would attract to much attention', you reason.", gameOver, false)),
+            Item("rug", "A long red rug.", unlocksItem = Item("dust", "It's dust. What did you expect", unlocksItem= Item("big key", "How the fuck did that work.", true)))
+            )
+        )
+        
+    entrance = Room(
+        name = "entrance",
+        entry = "Is that..? It's the exit! There is the main exit door!",
+        desc = "It's a big entry room with banners hanging from the roof.",
+        doors = ListBuffer(
+            Door(Dir.UP, "hallway", doorType = "stairs"),
+            Door(Dir.NORTH, "freedom", "big key")
+          )
+        )
+        
+    dinning_room = Room(
+        name = "dinning room",
+        desc = "This room has a big long table in it, but only one chair on each end.",
+        items = ListBuffer(
+            Item("wine glass", "It contains a red fluid. Hmm."),
+            Item("gun", "It's a clock, just laying next to a plate", event = Event("Shoot yourself?", "You shoot your foot. The bang was so loud the vampire woke up!", "'I'm sure it's not loaded', you think", gameOver, false))
+          ),
+        doors = ListBuffer(
+            Door(Dir.WEST, "hallway")
+          )
+        )
+
+    bedroom = Room(
+        name = "bedroom",
+        entry="'My head hurts' you mutter, while slowly waking up. The dark room looks like a bedroom, except the bed is missing?\nMabye you should 'look' around. (type 'help' for all commands)",
+        desc="It's a dark bedroom. This was where I woke up.", 
+        items = ListBuffer(
+          Item("coffin", "It looks like a big black coffin. The lid is slightly open.",
+              event = coffin), 
+          Item("lamp", "It's an older lamp. The lightbulb seems to be missing."), 
+          Item("desk", "It's a dusty desk, with multiple drawers. There might be something 'use'ful inside.", 
+              unlocksItem = Item("key", "It's a small golden key. You could 'use' this to open some door.", true))), 
+        doors = ListBuffer(
+          Door(Dir.EAST, "hallway", "key")))
+          
+    
+    // Make list of rooms
+    rooms = ListBuffer(hallway, bedroom, dinning_room, entrance, freedom, error)      
+    inventory = ListBuffer.empty
+    currentRoom = bedroom
+
+    println("\n----------------------Game Start--------------------\n")   
+
+    currentRoom = bedroom
     bedroom.enter
     while (gameRunning) {
       userPromt
@@ -232,6 +311,7 @@ object Start {
     gameRunning = false
     println("The vampire attacked you before you could react. You died.")
     println("\n----------------------Game Over -------------------------\n")
+    if (usrYesOrNo("Do you want to restart the game?")) start()
   }
   
   ///god damn
